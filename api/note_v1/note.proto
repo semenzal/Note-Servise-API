@@ -7,6 +7,10 @@ option go_package = "github.com/semenzal/note-service-api/pkg/note_v1";
 
 service NoteService {
     rpc Create (CreateRequest) returns (CreateResponse);
+    rpc GetNote (GetNoteRequest) returns (GetNoteResponse);
+    rpc GetListNote (GetListNoteRequest) returns (GetListNoteResponse);
+    rpc UpdateNote (UpdateNoteRequest) returns (UpdateNoteResponse);
+    rpc DeleteNote (DeleteNoteRequest) returns (DeleteNoteResponse);
 }
 
 message CreateRequest {
@@ -16,5 +20,33 @@ message CreateRequest {
 }
 
 message CreateResponse {
+    int64 id = 1;
+}
+
+message GetNoteRequest {
+    string nota = 1;
+}
+message GetNoteResponse {
+    int64 id = 1;
+}
+
+message GetListNoteRequest {
+    string all_id = 1;
+}
+message GetListNoteResponse {
+    int64 id = 1; 
+}
+
+message UpdateNoteRequest {
+    string update = 1;
+}
+message UpdateNoteResponse {
+    int64 id = 1;
+}
+
+message DeleteNoteRequest {
+    string delete = 1;
+}
+message DeleteNoteResponse {
     int64 id = 1;
 }

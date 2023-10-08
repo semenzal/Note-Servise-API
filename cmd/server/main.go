@@ -29,6 +29,46 @@ func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.Cre
 	}, nil
 }
 
+func (s *server) GetNote(ctx context.Context, req *desc.GetNoteRequest) (*desc.GetNoteResponse, error) {
+	log.Println(
+		"Nota:", req.GetNota(),
+	)
+
+	return &desc.GetNoteResponse{
+		Id: int64(3),
+	}, nil
+}
+
+func (s *server) GetListNote(ctx context.Context, req *desc.GetListNoteRequest) (*desc.GetListNoteResponse, error) {
+	log.Println(
+		"Nota:", req.GetAllId(),
+	)
+
+	return &desc.GetListNoteResponse{
+		Id: int64(21),
+	}, nil
+}
+
+func (s *server) UpdateNote(ctx context.Context, req *desc.UpdateNoteRequest) (*desc.UpdateNoteResponse, error) {
+	log.Println(
+		"Update:", req.GetUpdate(),
+	)
+
+	return &desc.UpdateNoteResponse{
+		Id: int64(77),
+	}, nil
+}
+
+func (s *server) DeleteNote(ctx context.Context, req *desc.DeleteNoteRequest) (*desc.DeleteNoteResponse, error) {
+	log.Println(
+		"Delete:", req.GetDelete(),
+	)
+
+	return &desc.DeleteNoteResponse{
+		Id: int64(0),
+	}, nil
+}
+
 func main() {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
 	if err != nil {
