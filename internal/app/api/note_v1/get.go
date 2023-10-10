@@ -7,11 +7,11 @@ import (
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 
-func (n *Note) GetNote(ctx context.Context, req *desc.GetNoteRequest) (*desc.GetNoteResponse, error) {
+func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
 	fmt.Println("GetNote")
 	fmt.Println("nota", req.GetNota())
 
-	return &desc.GetNoteResponse{
+	return &desc.GetResponse{
 		Id: 3,
 	}, nil
 }

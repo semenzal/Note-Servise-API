@@ -30,7 +30,7 @@ func main() {
 
 	log.Println("Id:", res.Id)
 
-	res_GetNote, err := client.GetNote(context.Background(), &desc.GetNoteRequest{
+	res_GetNote, err := client.Get(context.Background(), &desc.GetRequest{
 		Nota: "Hello!",
 	})
 	if err != nil {
@@ -39,7 +39,7 @@ func main() {
 
 	log.Println("Id:", res_GetNote.Id)
 
-	res_GetList, err := client.GetListNote(context.Background(), &desc.GetListNoteRequest{
+	res_GetList, err := client.GetList(context.Background(), &desc.GetListRequest{
 		AllId: "All Id base",
 	})
 	if err != nil {
@@ -48,7 +48,7 @@ func main() {
 
 	log.Println("All Id:", res_GetList.Id)
 
-	res_Update, err := client.UpdateNote(context.Background(), &desc.UpdateNoteRequest{
+	res_Update, err := client.Update(context.Background(), &desc.UpdateRequest{
 		Update: "New Id",
 	})
 	if err != nil {
@@ -57,7 +57,7 @@ func main() {
 
 	log.Println("New Id:", res_Update.Id)
 
-	res_Delete, err := client.DeleteNote(context.Background(), &desc.DeleteNoteRequest{
+	res_Delete, err := client.Delete(context.Background(), &desc.DeleteRequest{
 		Delete: "Empty",
 	})
 	if err != nil {

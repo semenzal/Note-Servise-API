@@ -29,42 +29,42 @@ func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.Cre
 	}, nil
 }
 
-func (s *server) GetNote(ctx context.Context, req *desc.GetNoteRequest) (*desc.GetNoteResponse, error) {
+func (s *server) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
 	log.Println(
 		"Nota:", req.GetNota(),
 	)
 
-	return &desc.GetNoteResponse{
+	return &desc.GetResponse{
 		Id: int64(3),
 	}, nil
 }
 
-func (s *server) GetListNote(ctx context.Context, req *desc.GetListNoteRequest) (*desc.GetListNoteResponse, error) {
+func (s *server) GetList(ctx context.Context, req *desc.GetListRequest) (*desc.GetListResponse, error) {
 	log.Println(
 		"Nota:", req.GetAllId(),
 	)
 
-	return &desc.GetListNoteResponse{
+	return &desc.GetListResponse{
 		Id: int64(21),
 	}, nil
 }
 
-func (s *server) UpdateNote(ctx context.Context, req *desc.UpdateNoteRequest) (*desc.UpdateNoteResponse, error) {
+func (s *server) Update(ctx context.Context, req *desc.UpdateRequest) (*desc.UpdateResponse, error) {
 	log.Println(
 		"Update:", req.GetUpdate(),
 	)
 
-	return &desc.UpdateNoteResponse{
+	return &desc.UpdateResponse{
 		Id: int64(77),
 	}, nil
 }
 
-func (s *server) DeleteNote(ctx context.Context, req *desc.DeleteNoteRequest) (*desc.DeleteNoteResponse, error) {
+func (s *server) Delete(ctx context.Context, req *desc.DeleteRequest) (*desc.DeleteResponse, error) {
 	log.Println(
 		"Delete:", req.GetDelete(),
 	)
 
-	return &desc.DeleteNoteResponse{
+	return &desc.DeleteResponse{
 		Id: int64(0),
 	}, nil
 }
