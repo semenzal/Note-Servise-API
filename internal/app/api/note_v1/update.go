@@ -4,14 +4,14 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/golang/protobuf/ptypes/empty"
+
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 
-func (n *Note) UpdateNote(ctx context.Context, req *desc.UpdateRequest) (*desc.UpdateResponse, error) {
+func (n *Note) UpdateNote(ctx context.Context, req *desc.UpdateRequest) (*empty.Empty, error) {
 	fmt.Println("UpdateNote")
-	fmt.Println("update:", req.GetUpdate())
+	fmt.Println("update:", req.GetTitle(), req.GetText(), req.GetAuthor())
 
-	return &desc.UpdateResponse{
-		Id: 77,
-	}, nil
+	return &empty.Empty{}, nil
 }

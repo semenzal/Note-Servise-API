@@ -8,6 +8,7 @@ package note_v1
 
 import (
 	context "context"
+	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -24,9 +25,9 @@ const _ = grpc.SupportPackageIsVersion7
 type NoteServiceClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
-	GetList(ctx context.Context, in *GetListRequest, opts ...grpc.CallOption) (*GetListResponse, error)
-	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
-	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
+	GetList(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*GetListResponse, error)
+	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type noteServiceClient struct {
@@ -55,7 +56,7 @@ func (c *noteServiceClient) Get(ctx context.Context, in *GetRequest, opts ...grp
 	return out, nil
 }
 
-func (c *noteServiceClient) GetList(ctx context.Context, in *GetListRequest, opts ...grpc.CallOption) (*GetListResponse, error) {
+func (c *noteServiceClient) GetList(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*GetListResponse, error) {
 	out := new(GetListResponse)
 	err := c.cc.Invoke(ctx, "/api.note_v1.NoteService/GetList", in, out, opts...)
 	if err != nil {
@@ -64,8 +65,8 @@ func (c *noteServiceClient) GetList(ctx context.Context, in *GetListRequest, opt
 	return out, nil
 }
 
-func (c *noteServiceClient) Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error) {
-	out := new(UpdateResponse)
+func (c *noteServiceClient) Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, "/api.note_v1.NoteService/Update", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -73,8 +74,8 @@ func (c *noteServiceClient) Update(ctx context.Context, in *UpdateRequest, opts 
 	return out, nil
 }
 
-func (c *noteServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
-	out := new(DeleteResponse)
+func (c *noteServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, "/api.note_v1.NoteService/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -88,9 +89,9 @@ func (c *noteServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts 
 type NoteServiceServer interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	Get(context.Context, *GetRequest) (*GetResponse, error)
-	GetList(context.Context, *GetListRequest) (*GetListResponse, error)
-	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
-	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
+	GetList(context.Context, *empty.Empty) (*GetListResponse, error)
+	Update(context.Context, *UpdateRequest) (*empty.Empty, error)
+	Delete(context.Context, *DeleteRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedNoteServiceServer()
 }
 
@@ -104,13 +105,13 @@ func (UnimplementedNoteServiceServer) Create(context.Context, *CreateRequest) (*
 func (UnimplementedNoteServiceServer) Get(context.Context, *GetRequest) (*GetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedNoteServiceServer) GetList(context.Context, *GetListRequest) (*GetListResponse, error) {
+func (UnimplementedNoteServiceServer) GetList(context.Context, *empty.Empty) (*GetListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetList not implemented")
 }
-func (UnimplementedNoteServiceServer) Update(context.Context, *UpdateRequest) (*UpdateResponse, error) {
+func (UnimplementedNoteServiceServer) Update(context.Context, *UpdateRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedNoteServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+func (UnimplementedNoteServiceServer) Delete(context.Context, *DeleteRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedNoteServiceServer) mustEmbedUnimplementedNoteServiceServer() {}
@@ -163,7 +164,7 @@ func _NoteService_Get_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _NoteService_GetList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetListRequest)
+	in := new(empty.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -175,7 +176,7 @@ func _NoteService_GetList_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/api.note_v1.NoteService/GetList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NoteServiceServer).GetList(ctx, req.(*GetListRequest))
+		return srv.(NoteServiceServer).GetList(ctx, req.(*empty.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

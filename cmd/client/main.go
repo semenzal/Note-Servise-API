@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+
+	"github.com/golang/protobuf/ptypes/empty"
 
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 	"google.golang.org/grpc"
@@ -30,39 +33,45 @@ func main() {
 
 	log.Println("Id:", res.Id)
 
-	res_GetNote, err := client.Get(context.Background(), &desc.GetRequest{
-		Nota: "Hello!",
+	resGetNote, err := client.Get(context.Background(), &desc.GetRequest{
+		Id: 2,
 	})
 	if err != nil {
 		log.Println(err.Error())
 	}
 
-	log.Println("Id:", res_GetNote.Id)
+	log.Println("Id:", resGetNote.String())
 
-	res_GetList, err := client.GetList(context.Background(), &desc.GetListRequest{
-		AllId: "All Id base",
+	resGetList, err := client.GetList(context.Background(), &empty.Empty{})
+
+	if err != nil {
+		log.Println(err.Error())
+	}
+	for _, note := range resGetList.Note {
+
+		fmt.Println(note.Title)
+		fmt.Println(note.Text)
+		fmt.Println(note.Author)
+	}
+	log.Println("All Id:", resGetList.Note)
+
+	resUpdate, err := client.Update(context.Background(), &desc.UpdateRequest{
+		Title:  "New Wow!",
+		Text:   "New I'm surprised!",
+		Author: "New Semen",
 	})
 	if err != nil {
 		log.Println(err.Error())
 	}
 
-	log.Println("All Id:", res_GetList.Id)
+	log.Println("New Id:", resUpdate.String())
 
-	res_Update, err := client.Update(context.Background(), &desc.UpdateRequest{
-		Update: "New Id",
+	ResDelete, err := client.Delete(context.Background(), &desc.DeleteRequest{
+		Id: 12,
 	})
 	if err != nil {
 		log.Println(err.Error())
 	}
 
-	log.Println("New Id:", res_Update.Id)
-
-	res_Delete, err := client.Delete(context.Background(), &desc.DeleteRequest{
-		Delete: "Empty",
-	})
-	if err != nil {
-		log.Println(err.Error())
-	}
-
-	log.Println("Delete:", res_Delete.Id)
+	log.Println("Delete:", ResDelete.String())
 }

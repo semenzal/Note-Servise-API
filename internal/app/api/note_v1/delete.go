@@ -4,14 +4,14 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/golang/protobuf/ptypes/empty"
+
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 
-func (n *Note) DeleteNote(ctx context.Context, req *desc.DeleteRequest) (*desc.DeleteResponse, error) {
+func (n *Note) DeleteNote(ctx context.Context, req *desc.DeleteRequest) (*empty.Empty, error) {
 	fmt.Println("DeleteNote")
-	fmt.Println("delete:", req.GetDelete())
+	fmt.Println("delete:", req.GetId())
 
-	return &desc.DeleteResponse{
-		Id: 0,
-	}, nil
+	return &empty.Empty{}, nil
 }

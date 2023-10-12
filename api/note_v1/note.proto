@@ -10,9 +10,9 @@ option go_package = "github.com/semenzal/note-service-api/pkg/note_v1";
 service NoteService {
     rpc Create (CreateRequest) returns (CreateResponse);
     rpc Get (GetRequest) returns (GetResponse);
-    rpc GetList (GetListRequest) returns (GetListResponse);
+    rpc GetList (google.protobuf.Empty) returns (GetListResponse);
     rpc Update (UpdateRequest) returns (google.protobuf.Empty);
-    rpc Delete (DeleteRequest) returns (DeleteResponse);
+    rpc Delete (DeleteRequest) returns (google.protobuf.Empty);
 }
 
 message CreateRequest {
@@ -26,29 +26,28 @@ message CreateResponse {
 }
 
 message GetRequest {
-    string nota = 1;
-}
-message GetResponse {
     int64 id = 1;
 }
-
-message GetListRequest {
-    string all_id = 1;
+message GetResponse {
+    string Nota = 1;
 }
+
+message Note {
+    string Title = 1;
+    string Text = 2;
+    string Author = 3;
+}
+
 message GetListResponse {
-    int64 id = 1; 
+    repeated Note note = 1; 
 }
 
 message UpdateRequest {
-    string update = 1;
-}
-message google.protobuf.Empty {
-    
+    string title = 1;
+    string text = 2;
+    string author =3;
 }
 
 message DeleteRequest {
-    string delete = 1;
-}
-message DeleteResponse {
     int64 id = 1;
 }

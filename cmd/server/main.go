@@ -6,6 +6,8 @@ import (
 	"log"
 	"net"
 
+	"github.com/golang/protobuf/ptypes/empty"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
@@ -31,42 +33,38 @@ func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.Cre
 
 func (s *server) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
 	log.Println(
-		"Nota:", req.GetNota(),
+		"Nota:", req.GetId(),
 	)
 
 	return &desc.GetResponse{
-		Id: int64(3),
+		Nota: req.String(),
 	}, nil
 }
 
-func (s *server) GetList(ctx context.Context, req *desc.GetListRequest) (*desc.GetListResponse, error) {
-	log.Println(
-		"Nota:", req.GetAllId(),
-	)
+func (s *server) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResponse, error) {
+	log.Println("Nota:")
 
 	return &desc.GetListResponse{
-		Id: int64(21),
+		Note: []*desc.Note{},
 	}, nil
 }
 
-func (s *server) Update(ctx context.Context, req *desc.UpdateRequest) (*desc.UpdateResponse, error) {
+func (s *server) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empty, error) {
 	log.Println(
-		"Update:", req.GetUpdate(),
+		"Title:", req.GetTitle(),
+		"Text:", req.GetText(),
+		"Author", req.GetAuthor(),
 	)
 
-	return &desc.UpdateResponse{
-		Id: int64(77),
-	}, nil
+	return &empty.Empty{}, nil
 }
 
-func (s *server) Delete(ctx context.Context, req *desc.DeleteRequest) (*desc.DeleteResponse, error) {
+func (s *server) Delete(ctx context.Context, req *desc.DeleteRequest) (*empty.Empty, error) {
 	log.Println(
-		"Delete:", req.GetDelete(),
+		"Delete:", req.GetId(),
 	)
 
-	return &desc.DeleteResponse{
-		Id: int64(0),
-	}, nil
+	return &empty.Empty{}, nil
 }
 
 func main() {
