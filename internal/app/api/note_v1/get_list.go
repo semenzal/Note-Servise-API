@@ -9,11 +9,11 @@ import (
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 
-func (n *Note) GetListNote(ctx context.Context, req *empty.Empty) (*desc.GetListResponse, error) {
-	fmt.Println("GetListNote")
+func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResponse, error) {
+	fmt.Println("GetList")
 	fmt.Println("all_id:", req.String())
 
 	return &desc.GetListResponse{
-		Note: []*desc.Note{},
+		Notes: []*desc.Note{},
 	}, nil
 }

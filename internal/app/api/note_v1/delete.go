@@ -9,8 +9,8 @@ import (
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 
-func (n *Note) DeleteNote(ctx context.Context, req *desc.DeleteRequest) (*empty.Empty, error) {
-	fmt.Println("DeleteNote")
+func (n *Note) Delete(ctx context.Context, req *desc.DeleteRequest) (*empty.Empty, error) {
+	fmt.Println("Delete")
 	fmt.Println("delete:", req.GetId())
 
 	return &empty.Empty{}, nil

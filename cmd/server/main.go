@@ -22,9 +22,7 @@ type server struct {
 
 // Create ...
 func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
-	log.Printf(
-		"Title: %v\nAuthor:%v\nText:%v", req.GetTitle(), req.GetAuthor(), req.GetText(),
-	)
+	log.Printf("Title: %v\nAuthor:%v\nText:%v", req.GetTitle(), req.GetAuthor(), req.GetText())
 
 	return &desc.CreateResponse{
 		Id: int64(12),
@@ -32,12 +30,10 @@ func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.Cre
 }
 
 func (s *server) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
-	log.Println(
-		"Nota:", req.GetId(),
-	)
+	log.Println("Nota:", req.GetId())
 
 	return &desc.GetResponse{
-		Nota: req.String(),
+		Nota: req.GetId(),
 	}, nil
 }
 
@@ -45,7 +41,7 @@ func (s *server) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListRe
 	log.Println("Nota:")
 
 	return &desc.GetListResponse{
-		Note: []*desc.Note{},
+		Notes: []*desc.Note{},
 	}, nil
 }
 

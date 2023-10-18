@@ -43,17 +43,16 @@ func main() {
 	log.Println("Id:", resGetNote.String())
 
 	resGetList, err := client.GetList(context.Background(), &empty.Empty{})
-
 	if err != nil {
 		log.Println(err.Error())
 	}
-	for _, note := range resGetList.Note {
+	for _, note := range resGetList.Notes {
 
 		fmt.Println(note.Title)
 		fmt.Println(note.Text)
 		fmt.Println(note.Author)
 	}
-	log.Println("All Id:", resGetList.Note)
+	log.Println("All Id:", resGetList.Notes)
 
 	resUpdate, err := client.Update(context.Background(), &desc.UpdateRequest{
 		Title:  "New Wow!",
@@ -66,12 +65,12 @@ func main() {
 
 	log.Println("New Id:", resUpdate.String())
 
-	ResDelete, err := client.Delete(context.Background(), &desc.DeleteRequest{
+	resDelete, err := client.Delete(context.Background(), &desc.DeleteRequest{
 		Id: 12,
 	})
 	if err != nil {
 		log.Println(err.Error())
 	}
 
-	log.Println("Delete:", ResDelete.String())
+	log.Println("Delete:", resDelete.String())
 }

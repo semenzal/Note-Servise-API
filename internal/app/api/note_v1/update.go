@@ -9,8 +9,8 @@ import (
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 
-func (n *Note) UpdateNote(ctx context.Context, req *desc.UpdateRequest) (*empty.Empty, error) {
-	fmt.Println("UpdateNote")
+func (n *Note) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empty, error) {
+	fmt.Println("Update")
 	fmt.Println("update:", req.GetTitle(), req.GetText(), req.GetAuthor())
 
 	return &empty.Empty{}, nil

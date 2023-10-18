@@ -8,10 +8,10 @@ import (
 )
 
 func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
-	fmt.Println("GetNote")
+	fmt.Println("Get")
 	fmt.Println("nota", req.GetId())
 
 	return &desc.GetResponse{
-		Nota: req.String(),
+		Nota: req.GetId(),
 	}, nil
 }
