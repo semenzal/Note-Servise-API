@@ -9,9 +9,9 @@ import (
 
 func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
 	fmt.Println("Get")
-	fmt.Println("nota", req.GetId())
+	fmt.Println("note", &desc.Note{})
 
 	return &desc.GetResponse{
-		Nota: req.GetId(),
+		Note: &desc.Note{},
 	}, nil
 }

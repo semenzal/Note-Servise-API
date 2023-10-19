@@ -33,7 +33,7 @@ func (s *server) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetRespon
 	log.Println("Nota:", req.GetId())
 
 	return &desc.GetResponse{
-		Nota: req.GetId(),
+		Note: &desc.Note{},
 	}, nil
 }
 
