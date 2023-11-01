@@ -9,7 +9,7 @@ services:
     environment:
       - "POSTGRES_DB=note-service"
       - "POSTGRES_USER=note-service-user"
-      - "POSTGRES_PASSWORD=note-serice-password"
+      - "POSTGRES_PASSWORD=note-service-password"
     ports:
       - "54321:5432"
     volumes:
