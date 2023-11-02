@@ -27,10 +27,10 @@ func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResp
 	}
 	defer db.Close()
 
-	builder := sq.Insert(noteTable).
+	builder := sq.Select("id").
+		From(noteTable).
+		Where(sq.Eq{"Notes": []*desc.Note{}}).
 		PlaceholderFormat(sq.Dollar).
-		Columns("notes").
-		Values(req.String()).
 		Suffix("return all id")
 
 	query, args, err := builder.ToSql()

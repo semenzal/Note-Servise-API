@@ -25,10 +25,9 @@ func (n *Note) Delete(ctx context.Context, req *desc.DeleteRequest) (*empty.Empt
 	}
 	defer db.Close()
 
-	builder := sq.Insert(noteTable).
+	builder := sq.Delete(noteTable).
+		Where(sq.Eq{"id": req.Id}).
 		PlaceholderFormat(sq.Dollar).
-		Columns("title").
-		Values(req.GetId()).
 		Suffix("returning id")
 
 	query, args, err := builder.ToSql()

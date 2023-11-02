@@ -25,11 +25,11 @@ func (n *Note) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empt
 	}
 	defer db.Close()
 
-	builder := sq.Insert(noteTable).
-		PlaceholderFormat(sq.Dollar).
-		Columns("title, text, author").
-		Values(req.GetTitle(), req.GetText(), req.GetAuthor()).
-		Suffix("returning id")
+	builder := sq.Update(noteTable).
+		Set("title", req.Title).
+		Set("text", req.Text).
+		Set("author", req.Author).
+		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()
 	if err != nil {
@@ -43,8 +43,8 @@ func (n *Note) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empt
 	defer row.Close()
 
 	row.Next()
-	var id int64
-	err = row.Scan(&id)
+	var title, text, author string
+	err = row.Scan(&title, &text, &author)
 	if err != nil {
 		return nil, err
 	}
