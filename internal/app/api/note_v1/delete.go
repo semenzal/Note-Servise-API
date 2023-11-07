@@ -27,8 +27,7 @@ func (n *Note) Delete(ctx context.Context, req *desc.DeleteRequest) (*empty.Empt
 
 	builder := sq.Delete(noteTable).
 		Where(sq.Eq{"id": req.Id}).
-		PlaceholderFormat(sq.Dollar).
-		Suffix("returning id")
+		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()
 	if err != nil {
@@ -41,7 +40,7 @@ func (n *Note) Delete(ctx context.Context, req *desc.DeleteRequest) (*empty.Empt
 	}
 	defer row.Close()
 
-	row.Next()
+	/*row.Next()*/
 	var id int64
 	err = row.Scan(&id)
 	if err != nil {

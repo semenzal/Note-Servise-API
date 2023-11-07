@@ -23,11 +23,10 @@ func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse
 	}
 	defer db.Close()
 
-	builder := sq.Select("id").
+	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at").
 		From(noteTable).
 		Where(sq.Eq{"id": req.Id}).
-		PlaceholderFormat(sq.Dollar).
-		Suffix("returning note")
+		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()
 	if err != nil {

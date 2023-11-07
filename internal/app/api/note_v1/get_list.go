@@ -27,11 +27,10 @@ func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResp
 	}
 	defer db.Close()
 
-	builder := sq.Select("id").
+	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at").
 		From(noteTable).
-		Where(sq.Eq{"Notes": []*desc.Note{}}).
-		PlaceholderFormat(sq.Dollar).
-		Suffix("return all id")
+		/*Where(sq.Eq{"Notes": []*desc.Note{}}).*/
+		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()
 	if err != nil {
@@ -44,11 +43,12 @@ func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResp
 	}
 	defer row.Close()
 
-	row.Next()
-	var notes Note
-	err = row.Scan(&notes)
-	if err != nil {
-		return nil, err
+	for row.Next() {
+		var notes Note
+		err = row.Scan(&notes)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &desc.GetListResponse{
