@@ -2,9 +2,9 @@ package note_v1
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
-
-	/*"go/build"*/
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/golang/protobuf/ptypes/empty"
@@ -29,7 +29,6 @@ func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResp
 
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at").
 		From(noteTable).
-		/*Where(sq.Eq{"Notes": []*desc.Note{}}).*/
 		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()
@@ -43,9 +42,23 @@ func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResp
 	}
 	defer row.Close()
 
+	type Note struct {
+		id         int64
+		title      string
+		text       string
+		author     string
+		created_at time.Time
+		updated_at sql.NullTime
+	}
+	Notes := []*desc.Note{}
+	Notes = append(Notes, Notes...)
+
 	for row.Next() {
-		var notes Note
-		err = row.Scan(&notes)
+		var id int64
+		var title, text, author string
+		var createdAt time.Time
+		var updatedAt sql.NullTime
+		err = row.Scan(&id, &title, &text, &author, &createdAt, &updatedAt)
 		if err != nil {
 			return nil, err
 		}

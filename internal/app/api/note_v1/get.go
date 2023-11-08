@@ -2,7 +2,9 @@ package note_v1
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/jackc/pgx/stdlib"
@@ -40,8 +42,11 @@ func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse
 	defer row.Close()
 
 	row.Next()
-	var note Note
-	err = row.Scan(&note)
+	var id int64
+	var title, text, author string
+	var createdAt time.Time
+	var updatedAt sql.NullTime
+	err = row.Scan(&id, &title, &text, &author, &createdAt, &updatedAt)
 	if err != nil {
 		return nil, err
 	}
