@@ -42,16 +42,7 @@ func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResp
 	}
 	defer row.Close()
 
-	type Note struct {
-		id         int64
-		title      string
-		text       string
-		author     string
-		created_at time.Time
-		updated_at sql.NullTime
-	}
-	Notes := []*desc.Note{}
-	Notes = append(Notes, Notes...)
+	notes := []*desc.Note{}
 
 	for row.Next() {
 		var id int64
@@ -62,6 +53,13 @@ func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResp
 		if err != nil {
 			return nil, err
 		}
+
+		notes = append(notes, &desc.Note{
+			Id:     id,
+			Title:  title,
+			Text:   text,
+			Author: author,
+		})
 	}
 
 	return &desc.GetListResponse{
