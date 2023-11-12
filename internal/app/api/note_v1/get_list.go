@@ -10,6 +10,7 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
@@ -54,15 +55,22 @@ func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResp
 			return nil, err
 		}
 
+		var updatedAtProto *timestamppb.Timestamp
+		if updatedAt.Valid {
+			updatedAtProto = timestamppb.New(updatedAt.Time)
+		}
+
 		notes = append(notes, &desc.Note{
-			Id:     id,
-			Title:  title,
-			Text:   text,
-			Author: author,
+			Id:        id,
+			Title:     title,
+			Text:      text,
+			Author:    author,
+			CreatedAt: timestamppb.New(createdAt),
+			UpdatedAt: updatedAtProto,
 		})
 	}
 
 	return &desc.GetListResponse{
-		Notes: []*desc.Note{},
+		Notes: notes,
 	}, nil
 }
