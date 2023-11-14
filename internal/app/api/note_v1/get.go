@@ -10,6 +10,7 @@ import (
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
@@ -51,7 +52,19 @@ func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse
 		return nil, err
 	}
 
+	var updatedAtProto *timestamppb.Timestamp
+	if updatedAt.Valid {
+		updatedAtProto = timestamppb.New(updatedAt.Time)
+	}
+
 	return &desc.GetResponse{
-		Note: &desc.Note{},
+		Note: &desc.Note{
+			Id:        id,
+			Title:     title,
+			Text:      text,
+			Author:    author,
+			CreatedAt: timestamppb.New(createdAt),
+			UpdatedAt: updatedAtProto,
+		},
 	}, nil
 }

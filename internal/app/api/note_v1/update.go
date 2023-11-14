@@ -36,15 +36,7 @@ func (n *Note) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empt
 		return nil, err
 	}
 
-	row, err := db.QueryContext(ctx, query, args...)
-	if err != nil {
-		return nil, err
-	}
-	defer row.Close()
-
-	row.Next()
-	var title, text, author string
-	err = row.Scan(&title, &text, &author)
+	_, err = db.ExecContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}

@@ -34,15 +34,7 @@ func (n *Note) Delete(ctx context.Context, req *desc.DeleteRequest) (*empty.Empt
 		return nil, err
 	}
 
-	row, err := db.QueryContext(ctx, query, args...)
-	if err != nil {
-		return nil, err
-	}
-	defer row.Close()
-
-	/*row.Next()*/
-	var id int64
-	err = row.Scan(&id)
+	_, err = db.ExecContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}
