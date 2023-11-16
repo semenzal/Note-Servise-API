@@ -9,11 +9,11 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
+
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 
 func (n *Note) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empty, error) {
-
 	dbDsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		host, port, dbUser, dbPassword, dbName, sslMode,
@@ -29,7 +29,8 @@ func (n *Note) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empt
 		Set("title", req.Title).
 		Set("text", req.Text).
 		Set("author", req.Author).
-		PlaceholderFormat(sq.Dollar)
+		PlaceholderFormat(sq.Dollar).
+		Where(sq.Eq{"id": req.Id})
 
 	query, args, err := builder.ToSql()
 	if err != nil {

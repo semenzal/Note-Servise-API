@@ -9,12 +9,12 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
-	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
+
+	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 
 func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
-
 	dbDsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		host, port, dbUser, dbPassword, dbName, sslMode,
@@ -29,20 +29,16 @@ func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at").
 		From(noteTable).
 		Where(sq.Eq{"id": req.Id}).
-		PlaceholderFormat(sq.Dollar)
+		PlaceholderFormat(sq.Dollar).
+		Limit(1)
 
 	query, args, err := builder.ToSql()
 	if err != nil {
 		return nil, err
 	}
 
-	row, err := db.QueryContext(ctx, query, args...)
-	if err != nil {
-		return nil, err
-	}
-	defer row.Close()
+	row := db.QueryRowContext(ctx, query, args...)
 
-	row.Next()
 	var id int64
 	var title, text, author string
 	var createdAt time.Time

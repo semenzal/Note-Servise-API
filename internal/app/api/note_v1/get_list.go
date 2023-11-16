@@ -16,7 +16,6 @@ import (
 )
 
 func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResponse, error) {
-
 	dbDsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		host, port, dbUser, dbPassword, dbName, sslMode,

@@ -7,6 +7,7 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
+
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 
@@ -57,6 +58,6 @@ func (n *Note) Create(ctx context.Context, req *desc.CreateRequest) (*desc.Creat
 	}
 
 	return &desc.CreateResponse{
-		Id: 1,
+		Id: id,
 	}, nil
 }
