@@ -4,16 +4,43 @@ package api.note_v1;
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "validate/validate.proto";
 
 
 option go_package = "github.com/semenzal/note-service-api/pkg/note_v1";
 
 service NoteService {
-  rpc Create (CreateRequest) returns (CreateResponse);
-  rpc Get (GetRequest) returns (GetResponse);
-  rpc GetList (google.protobuf.Empty) returns (GetListResponse);
-  rpc Update (UpdateRequest) returns (google.protobuf.Empty);
-  rpc Delete (DeleteRequest) returns (google.protobuf.Empty);
+  rpc Create (CreateRequest) returns (CreateResponse) {
+    option (google.api.http) = {
+      post: "/note/v1/create"
+      body: "*"
+    };
+  }
+  rpc Get (GetRequest) returns (GetResponse) {
+    option (google.api.http) = {
+      post: "/note/v1/get"
+      body: "*"
+    };
+  }
+  rpc GetList (google.protobuf.Empty) returns (GetListResponse) {
+    option (google.api.http) = {
+      post: "/note/v1/get_list"
+      body: "*"
+    };
+  }
+  rpc Update (UpdateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/note/v1/update"
+      body: "*"
+    };
+  }
+  rpc Delete (DeleteRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/note/v1/delete"
+      body: "*"
+    };
+  }
 }
 
 message Note {
@@ -23,6 +50,7 @@ message Note {
   string author = 4;
   google.protobuf.Timestamp created_at = 5;
   google.protobuf.Timestamp updated_at = 6;
+  string email = 7 [(validate.rules).string.email = true];
 }
 
 message CreateRequest {
