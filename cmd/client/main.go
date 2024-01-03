@@ -42,7 +42,7 @@ func main() {
 
 	log.Println("Id:", resGetNote.String())
 
-	resGetList, err := client.GetList(context.Background(), &empty.Empty{})
+	resGetList, err := client.List(context.Background(), &empty.Empty{})
 	if err != nil {
 		log.Println(err.Error())
 	}
