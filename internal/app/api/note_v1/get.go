@@ -15,28 +15,4 @@ func (n *Note) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse
 	}
 
 	return res, nil
-
-	/*dbDsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		host, port, dbUser, dbPassword, dbName, sslMode,
-	)
-
-	db, err := sqlx.Open("pgx", dbDsn)
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	
-
-	return &desc.GetResponse{
-		Note: &desc.Note{
-			Id:        id,
-			Title:     title,
-			Text:      text,
-			Author:    author,
-			CreatedAt: timestamppb.New(createdAt),
-			UpdatedAt: updatedAtProto,
-		},
-	}, nil*/
 }

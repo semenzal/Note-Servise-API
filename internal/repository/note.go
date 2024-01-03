@@ -18,8 +18,8 @@ type NoteRepository interface {
 	Create(ctx context.Context, req *desc.CreateRequest) (int64, error)
 	Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error)
 	GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResponse, error)
-	Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empty, error)
-	Delete(ctx context.Context, req *desc.DeleteRequest) (*empty.Empty, error)
+	Update(ctx context.Context, req *desc.UpdateRequest) error
+	Delete(ctx context.Context, req *desc.DeleteRequest) error
 }
 
 type repository struct {
@@ -148,7 +148,7 @@ func (r *repository) GetList(ctx context.Context, req *empty.Empty) (*desc.GetLi
 	}, nil
 }
 
-func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empty, error) {
+func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) error {
 	builder := sq.Update(table.Note).
 		Set("title", req.Title).
 		Set("text", req.Text).
@@ -158,31 +158,31 @@ func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) (*empt
 
 	query, args, err := builder.ToSql()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return &empty.Empty{}, nil
+	return nil
 }
 
-func (r *repository) Delete(ctx context.Context, req *desc.DeleteRequest) (*empty.Empty, error) {
+func (r *repository) Delete(ctx context.Context, req *desc.DeleteRequest) (error) {
 	builder := sq.Delete(table.Note).
 		Where(sq.Eq{"id": req.Id}).
 		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return &empty.Empty{}, nil
+	return nil
 }

@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	hostGrps = "localhost:50051"
+	hostGrpc = "localhost:50051"
 	hostHttp = "localhost:8090"
 )
 
@@ -40,21 +40,27 @@ func main() {
 	
 	go func() {
 		defer wg.Done()
-		starGRPS()
+		err := starGRPC()
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 	}()
 
 	go func() {
 		defer wg.Done()
-		startHttp()
+		err := startHttp()
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 	}()
 
 	wg.Wait()
 }
 
-func starGRPS() error {
-	list, err := net.Listen("tcp", hostGrps)
+func starGRPC() error {
+	list, err := net.Listen("tcp", hostGrpc)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err.Error())
+		return err
 	}
 
 	dbDsn := fmt.Sprintf(
@@ -77,10 +83,9 @@ func starGRPS() error {
 	reflection.Register(s)
 	desc.RegisterNoteServiceServer(s, note_v1.NewNote(noteService))
 
-	fmt.Println("grpc server is running on port:", hostGrps)
+	fmt.Println("grpc server is running on port:", hostGrpc)
 
 	if err = s.Serve(list); err != nil {
-		log.Fatalf("failed to serve: %s", err.Error())
 		return err
 	}
 
@@ -94,7 +99,7 @@ func startHttp() error {
 
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err := desc.RegisterNoteServiceHandlerFromEndpoint(ctx, mux, hostGrps, opts)
+	err := desc.RegisterNoteServiceHandlerFromEndpoint(ctx, mux, hostGrpc, opts)
 	if err != nil {
 		return err
 	}

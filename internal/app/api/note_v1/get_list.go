@@ -16,21 +16,4 @@ func (n *Note) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResp
 	}
 
 	return res, nil
-	
-	/*dbDsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		host, port, dbUser, dbPassword, dbName, sslMode,
-	)
-
-	db, err := sqlx.Open("pgx", dbDsn)
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	
-
-	return &desc.GetListResponse{
-		Notes: notes,
-	}, nil*/
 }

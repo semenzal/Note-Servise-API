@@ -11,7 +11,7 @@
     "application/json"
   ],
   "paths": {
-    "/note/v1/create": {
+    "/note/v1": {
       "post": {
         "operationId": "NoteService_Create",
         "responses": {
@@ -41,106 +41,8 @@
         "tags": [
           "NoteService"
         ]
-      }
-    },
-    "/note/v1/delete": {
-      "post": {
-        "operationId": "NoteService_Delete",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/note_v1DeleteRequest"
-            }
-          }
-        ],
-        "tags": [
-          "NoteService"
-        ]
-      }
-    },
-    "/note/v1/get": {
-      "post": {
-        "operationId": "NoteService_Get",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/note_v1GetResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/note_v1GetRequest"
-            }
-          }
-        ],
-        "tags": [
-          "NoteService"
-        ]
-      }
-    },
-    "/note/v1/get_list": {
-      "post": {
-        "operationId": "NoteService_GetList",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/note_v1GetListResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "properties": {}
-            }
-          }
-        ],
-        "tags": [
-          "NoteService"
-        ]
-      }
-    },
-    "/note/v1/update": {
-      "post": {
+      },
+      "patch": {
         "operationId": "NoteService_Update",
         "responses": {
           "200": {
@@ -164,6 +66,88 @@
             "schema": {
               "$ref": "#/definitions/note_v1UpdateRequest"
             }
+          }
+        ],
+        "tags": [
+          "NoteService"
+        ]
+      }
+    },
+    "/note/v1/get_list": {
+      "get": {
+        "operationId": "NoteService_GetList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/note_v1GetListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "NoteService"
+        ]
+      }
+    },
+    "/note/v1/{id}": {
+      "get": {
+        "operationId": "NoteService_Get",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/note_v1GetResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "NoteService"
+        ]
+      },
+      "delete": {
+        "operationId": "NoteService_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -196,15 +180,6 @@
         }
       }
     },
-    "note_v1DeleteRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        }
-      }
-    },
     "note_v1GetListResponse": {
       "type": "object",
       "properties": {
@@ -213,15 +188,6 @@
           "items": {
             "$ref": "#/definitions/note_v1Note"
           }
-        }
-      }
-    },
-    "note_v1GetRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
         }
       }
     },
