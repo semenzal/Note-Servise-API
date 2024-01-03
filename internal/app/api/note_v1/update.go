@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	_ "github.com/jackc/pgx/stdlib"
 
@@ -16,5 +17,5 @@ func (n *Note) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empt
 		return nil, err
 	}
 
-	return nil, err
+	return &emptypb.Empty{}, nil
 }

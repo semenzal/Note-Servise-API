@@ -5,6 +5,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes/empty"
 	_ "github.com/jackc/pgx/stdlib"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
@@ -15,5 +16,5 @@ func (n *Note) Delete(ctx context.Context, req *desc.DeleteRequest) (*empty.Empt
 		return nil, err
 	}
 
-	return nil, err
+	return &emptypb.Empty{} ,nil
 }

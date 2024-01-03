@@ -73,9 +73,9 @@
         ]
       }
     },
-    "/note/v1/get_list": {
+    "/note/v1/list": {
       "get": {
-        "operationId": "NoteService_GetList",
+        "operationId": "NoteService_List",
         "responses": {
           "200": {
             "description": "A successful response.",

@@ -24,9 +24,9 @@ service NoteService {
     };
   }
 
-  rpc GetList (google.protobuf.Empty) returns (GetListResponse) {
+  rpc List (google.protobuf.Empty) returns (GetListResponse) {
     option (google.api.http) = {
-      get: "/note/v1/get_list"
+      get: "/note/v1/list"
     };
   }
 
