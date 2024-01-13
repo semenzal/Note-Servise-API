@@ -3,40 +3,38 @@ package repository
 import (
 	"context"
 	"time"
-	"database/sql"
 
-	"github.com/jmoiron/sqlx"
+	"github.com/semenzal/note-service-api/internal/model"
+	"github.com/semenzal/note-service-api/internal/pkg/db"
 	"github.com/semenzal/note-service-api/internal/repository/table"
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
-	"google.golang.org/protobuf/types/known/timestamppb"
-	"github.com/golang/protobuf/ptypes/empty"
 
 	sq "github.com/Masterminds/squirrel"
 )
 
 type NoteRepository interface {
-	Create(ctx context.Context, req *desc.CreateRequest) (int64, error)
-	Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error)
-	GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResponse, error)
+	Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error)
+	Get(ctx context.Context, id int64) (*model.Note, error)
+	GetList(ctx context.Context) ([]*model.Note, error)
 	Update(ctx context.Context, req *desc.UpdateRequest) error
 	Delete(ctx context.Context, req *desc.DeleteRequest) error
 }
 
 type repository struct {
-	db *sqlx.DB
+	client db.Client
 }
 
-func NewNoteRepository(db *sqlx.DB) NoteRepository {
+func NewNoteRepository(client db.Client) NoteRepository {
 	return &repository{
-		db: db,
+		client: client,
 	}
 }
 
-func (r *repository) Create(ctx context.Context, req *desc.CreateRequest) (int64, error){
+func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error){
 	builder := sq.Insert(table.Note).
 		PlaceholderFormat(sq.Dollar).
 		Columns("title, text, author").
-		Values(req.GetTitle(), req.GetText(), req.GetAuthor()).
+		Values(noteInfo.Title, noteInfo.Text, noteInfo.Author).
 		Suffix("returning id")
 
 	query, args, err := builder.ToSql()
@@ -44,7 +42,12 @@ func (r *repository) Create(ctx context.Context, req *desc.CreateRequest) (int64
 		return 0, err
 	}
 
-	row, err := r.db.QueryContext(ctx, query, args...)
+	q := db.Query {
+		Name: "Create",
+		QueryRaw: query,
+	}
+
+	row, err := r.client.DB().QueryContext(ctx, q, args...)
 	if err != nil {
 		return 0, err
 	}
@@ -60,10 +63,10 @@ func (r *repository) Create(ctx context.Context, req *desc.CreateRequest) (int64
 	return id, nil
 }
 
-func (r *repository) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
+func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at").
 		From(table.Note).
-		Where(sq.Eq{"id": req.Id}).
+		Where(sq.Eq{"id": id}).
 		PlaceholderFormat(sq.Dollar).
 		Limit(1)
 
@@ -72,35 +75,21 @@ func (r *repository) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetRe
 		return nil, err
 	}
 
-	row := r.db.QueryRowContext(ctx, query, args...)
+	q := db.Query {
+		Name: "Get",
+		QueryRaw: query,
+	}
 
-	var id int64
-	var title, text, author string
-	var createdAt time.Time
-	var updatedAt sql.NullTime
-	err = row.Scan(&id, &title, &text, &author, &createdAt, &updatedAt)
+	note := new(model.Note)
+	err = r.client.DB().GetContext(ctx, note, q, args...)
 	if err != nil {
 		return nil, err
 	}
 
-	var updatedAtProto *timestamppb.Timestamp
-	if updatedAt.Valid {
-		updatedAtProto = timestamppb.New(updatedAt.Time)
-	}
-
-	return &desc.GetResponse{
-		Note: &desc.Note{
-			Id:        id,
-			Title:     title,
-			Text:      text,
-			Author:    author,
-			CreatedAt: timestamppb.New(createdAt),
-			UpdatedAt: updatedAtProto,
-		},
-	}, nil
+	return note, nil
 }
 
-func (r *repository) GetList(ctx context.Context, req *empty.Empty) (*desc.GetListResponse, error){
+func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at").
 		From(table.Note).
 		PlaceholderFormat(sq.Dollar)
@@ -110,58 +99,50 @@ func (r *repository) GetList(ctx context.Context, req *empty.Empty) (*desc.GetLi
 		return nil, err
 	}
 
-	row, err := r.db.QueryContext(ctx, query, args...)
+
+	q := db.Query {
+		Name: "GetList",
+		QueryRaw: query,
+	}
+
+	var notes []*model.Note
+	err = r.client.DB().SelectContext(ctx, notes, q, args...)
 	if err != nil {
 		return nil, err
 	}
-	defer row.Close()
-
-	notes := []*desc.Note{}
-
-	for row.Next() {
-		var id int64
-		var title, text, author string
-		var createdAt time.Time
-		var updatedAt sql.NullTime
-		err = row.Scan(&id, &title, &text, &author, &createdAt, &updatedAt)
-		if err != nil {
-			return nil, err
-		}
-
-		var updatedAtProto *timestamppb.Timestamp
-		if updatedAt.Valid {
-			updatedAtProto = timestamppb.New(updatedAt.Time)
-		}
-
-		notes = append(notes, &desc.Note{
-			Id:        id,
-			Title:     title,
-			Text:      text,
-			Author:    author,
-			CreatedAt: timestamppb.New(createdAt),
-			UpdatedAt: updatedAtProto,
-		})
-	}
-
-	return &desc.GetListResponse{
-		Notes: notes,
-	}, nil
+	
+	return notes, nil
 }
 
 func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) error {
 	builder := sq.Update(table.Note).
-		Set("title", req.Title).
-		Set("text", req.Text).
-		Set("author", req.Author).
 		PlaceholderFormat(sq.Dollar).
-		Where(sq.Eq{"id": req.Id})
+		Set("update_at", time.Now()).
+		Where(sq.Eq{"id": req.GetId()})
+
+	if req.GetNote().GetTitle() != nil {
+		builder.Set("title", req.GetNote().GetTitle())
+	}
+
+	if req.GetNote().GetText() != nil {
+		builder.Set("text", req.GetNote().GetText())
+	}
+
+	if req.GetNote().GetAuthor() != nil {
+		builder.Set("author", req.GetNote().GetAuthor())
+	}
 
 	query, args, err := builder.ToSql()
 	if err != nil {
 		return err
 	}
 
-	_, err = r.db.ExecContext(ctx, query, args...)
+	q := db.Query {
+		Name: "Update",
+		QueryRaw: query,
+	}
+
+	_, err = r.client.DB().ExecContext(ctx, q, args...)
 	if err != nil {
 		return err
 	}
@@ -179,7 +160,11 @@ func (r *repository) Delete(ctx context.Context, req *desc.DeleteRequest) (error
 		return err
 	}
 
-	_, err = r.db.ExecContext(ctx, query, args...)
+	q := db.Query {
+		Name: "Delete",
+		QueryRaw: query,
+	}
+	_, err = r.client.DB().ExecContext(ctx, q, args...)
 	if err != nil {
 		return err
 	}
