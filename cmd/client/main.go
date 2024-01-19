@@ -23,10 +23,11 @@ func main() {
 	client := desc.NewNoteServiceClient(con)
 
 	res, err := client.Create(context.Background(), &desc.CreateRequest{
-		Note: &desc.NoteInfo{},
-		/*Title:  "Wow!",
-		Text:   "I'm surprised!",
-		Author: "Semen",*/
+		Note: &desc.NoteInfo{
+			Title:  "Wow",
+			Text:   "I'm surprised!",
+			Author: "Semen",
+		},
 	})
 	if err != nil {
 		log.Println(err.Error())
@@ -56,10 +57,11 @@ func main() {
 	log.Println("All Id:", resGetList.Notes)
 
 	resUpdate, err := client.Update(context.Background(), &desc.UpdateRequest{
-		Note: &desc.UpdateNoteInfo{},
-		/*Title:  "New Wow!",
-		Text:   "New I'm surprised!",
-		Author: "New Semen",*/
+		Note: &desc.UpdateNoteInfo{
+			Title: 	nil,
+			Text: 	nil,
+			Author: nil,
+		},
 	})
 	if err != nil {
 		log.Println(err.Error())

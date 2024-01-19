@@ -8,14 +8,12 @@ import (
 	"github.com/semenzal/note-service-api/internal/pkg/db"
 	"github.com/semenzal/note-service-api/internal/repository"
 	"github.com/semenzal/note-service-api/internal/service/note"
-
 )
 
 type serviceProvider struct {
-	db 			db.Client
-	configPath 	string
-	config 		*config.Config
-	 
+	db         db.Client
+	configPath string
+	config     *config.Config
 
 	// repositories
 	noteRepository repository.NoteRepository

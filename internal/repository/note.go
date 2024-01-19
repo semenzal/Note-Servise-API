@@ -30,7 +30,7 @@ func NewNoteRepository(client db.Client) NoteRepository {
 	}
 }
 
-func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error){
+func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error) {
 	builder := sq.Insert(table.Note).
 		PlaceholderFormat(sq.Dollar).
 		Columns("title, text, author").
@@ -42,8 +42,8 @@ func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int6
 		return 0, err
 	}
 
-	q := db.Query {
-		Name: "Create",
+	q := db.Query{
+		Name:     "Create",
 		QueryRaw: query,
 	}
 
@@ -59,12 +59,12 @@ func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int6
 	if err != nil {
 		return 0, err
 	}
-	
+
 	return id, nil
 }
 
 func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
-	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at").
+	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
 		From(table.Note).
 		Where(sq.Eq{"id": id}).
 		PlaceholderFormat(sq.Dollar).
@@ -75,8 +75,8 @@ func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 		return nil, err
 	}
 
-	q := db.Query {
-		Name: "Get",
+	q := db.Query{
+		Name:     "Get",
 		QueryRaw: query,
 	}
 
@@ -90,7 +90,7 @@ func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 }
 
 func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
-	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at").
+	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
 		From(table.Note).
 		PlaceholderFormat(sq.Dollar)
 
@@ -99,9 +99,8 @@ func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 		return nil, err
 	}
 
-
-	q := db.Query {
-		Name: "GetList",
+	q := db.Query{
+		Name:     "GetList",
 		QueryRaw: query,
 	}
 
@@ -110,7 +109,7 @@ func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return notes, nil
 }
 
@@ -132,13 +131,17 @@ func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) error 
 		builder.Set("author", req.GetNote().GetAuthor())
 	}
 
+	if req.GetNote().GetEmail() != nil {
+		builder.Set("email", req.GetNote().GetEmail())
+	}
+
 	query, args, err := builder.ToSql()
 	if err != nil {
 		return err
 	}
 
-	q := db.Query {
-		Name: "Update",
+	q := db.Query{
+		Name:     "Update",
 		QueryRaw: query,
 	}
 
@@ -150,7 +153,7 @@ func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) error 
 	return nil
 }
 
-func (r *repository) Delete(ctx context.Context, req *desc.DeleteRequest) (error) {
+func (r *repository) Delete(ctx context.Context, req *desc.DeleteRequest) error {
 	builder := sq.Delete(table.Note).
 		Where(sq.Eq{"id": req.Id}).
 		PlaceholderFormat(sq.Dollar)
@@ -160,8 +163,8 @@ func (r *repository) Delete(ctx context.Context, req *desc.DeleteRequest) (error
 		return err
 	}
 
-	q := db.Query {
-		Name: "Delete",
+	q := db.Query{
+		Name:     "Delete",
 		QueryRaw: query,
 	}
 	_, err = r.client.DB().ExecContext(ctx, q, args...)

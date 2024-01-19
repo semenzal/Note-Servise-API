@@ -49,12 +49,14 @@ message NoteInfo {
   string title = 1;
   string text = 2;
   string author = 3;
+  string email = 5 [(validate.rules).string.email = true];
 }
 
 message UpdateNoteInfo {
   google.protobuf.StringValue title = 1;
   google.protobuf.StringValue text = 2;
   google.protobuf.StringValue author = 3;
+  google.protobuf.StringValue email = 5 [(validate.rules).string.email = true];
 }
 
 message Note {

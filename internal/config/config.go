@@ -11,7 +11,7 @@ import (
 
 const (
 	dpPassEscSeq = "{password}"
-	password 	= "note-service-password"
+	password     = "note-service-password"
 )
 
 // HTTP ...
@@ -27,16 +27,16 @@ type GRPC struct {
 }
 
 // DB ...
-type DB struct{
-	DSN string `json:"dsn"`
-	MaxOpenConnections int32 `json:"max_open_connections"`
+type DB struct {
+	DSN                string `json:"dsn"`
+	MaxOpenConnections int32  `json:"max_open_connections"`
 }
 
 // Config ...
-type Config struct{
-	HTTP 	HTTP 	`json:"http"`
-	GRPC 	GRPC 	`json:"grpc"`
-	DB 		DB 		`json:"db"`
+type Config struct {
+	HTTP HTTP `json:"http"`
+	GRPC GRPC `json:"grpc"`
+	DB   DB   `json:"db"`
 }
 
 //NewConfig ...
@@ -48,7 +48,7 @@ func NewConfig(path string) (*Config, error) {
 
 	config := &Config{}
 	err = json.Unmarshal(file, &config)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 
@@ -77,4 +77,4 @@ func (c *Config) GetDBConfig() (*pgxpool.Config, error) {
 	poolConfig.MaxConns = c.DB.MaxOpenConnections
 
 	return poolConfig, nil
-} 
+}

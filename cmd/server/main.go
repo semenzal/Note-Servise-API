@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"log"
 	"flag"
+	"log"
 
 	app "github.com/semenzal/note-service-api/internal/app/api"
 )
@@ -28,4 +28,3 @@ func main() {
 		log.Fatalf("failed to run app: %s", err.Error())
 	}
 }
-

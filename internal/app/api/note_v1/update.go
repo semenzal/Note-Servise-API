@@ -6,8 +6,6 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	_ "github.com/jackc/pgx/stdlib"
-
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )
 

@@ -11,8 +11,8 @@ import (
 
 // Query ...
 type Query struct {
-	Name 		string
-	QueryRaw 	string
+	Name     string
+	QueryRaw string
 }
 
 // DB ...

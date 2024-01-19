@@ -3,8 +3,6 @@ package note_v1
 import (
 	"context"
 
-	_ "github.com/jackc/pgx/stdlib"
-
 	"github.com/semenzal/note-service-api/internal/converter"
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 )

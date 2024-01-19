@@ -13,8 +13,8 @@ type Client interface {
 }
 
 type client struct {
-	db 			*DB
-	closeFunc 	context.CancelFunc
+	db        *DB
+	closeFunc context.CancelFunc
 }
 
 // NewClient ...
@@ -27,12 +27,12 @@ func NewClient(ctx context.Context, config *pgxpool.Config) (Client, error) {
 	_, cancel := context.WithCancel(ctx)
 
 	return &client{
-		db: 		&DB{pool: dbc},
-		closeFunc: 	cancel,
+		db:        &DB{pool: dbc},
+		closeFunc: cancel,
 	}, nil
 }
 
-func (c *client) Close() error{
+func (c *client) Close() error {
 	if c != nil {
 		if c.closeFunc != nil {
 			c.closeFunc()
