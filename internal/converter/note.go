@@ -34,7 +34,6 @@ func ToDescNote(note *model.Note) *desc.Note {
 		Info:      	ToDescNoteInfo(note.Info),
 		CreatedAt: 	timestamppb.New(note.CreatedAt),
 		UpdatedAt: 	updatedAt,
-		Email: 		note.Info.Email,
 	}
 }
 

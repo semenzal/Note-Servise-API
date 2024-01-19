@@ -6,7 +6,8 @@ import (
 
 	"github.com/semenzal/note-service-api/internal/config"
 	"github.com/semenzal/note-service-api/internal/pkg/db"
-	"github.com/semenzal/note-service-api/internal/repository"
+	noteRepository "github.com/semenzal/note-service-api/internal/repository"
+	repository "github.com/semenzal/note-service-api/internal/repository/note"
 	"github.com/semenzal/note-service-api/internal/service/note"
 )
 
@@ -16,7 +17,7 @@ type serviceProvider struct {
 	config     *config.Config
 
 	// repositories
-	noteRepository repository.NoteRepository
+	noteRepository noteRepository.NoteRepository
 
 	// service
 	noteService *note.Service
@@ -61,9 +62,9 @@ func (s *serviceProvider) GetConfig() *config.Config {
 }
 
 // GetNoteRepository ...
-func (s *serviceProvider) GetNoteRepository(ctx context.Context) repository.NoteRepository {
+func (s *serviceProvider) GetNoteRepository(ctx context.Context) noteRepository.NoteRepository {
 	if s.noteRepository == nil {
-		s.noteRepository = repository.NewNoteRepository(s.GetDB(ctx))
+		s.noteRepository = repository.NewRepository(s.GetDB(ctx))
 	}
 
 	return s.noteRepository

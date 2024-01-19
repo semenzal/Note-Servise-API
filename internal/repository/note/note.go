@@ -6,32 +6,28 @@ import (
 
 	"github.com/semenzal/note-service-api/internal/model"
 	"github.com/semenzal/note-service-api/internal/pkg/db"
-	"github.com/semenzal/note-service-api/internal/repository/table"
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
+	noteRepository "github.com/semenzal/note-service-api/internal/repository"
 
 	sq "github.com/Masterminds/squirrel"
 )
 
-type NoteRepository interface {
-	Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error)
-	Get(ctx context.Context, id int64) (*model.Note, error)
-	GetList(ctx context.Context) ([]*model.Note, error)
-	Update(ctx context.Context, req *desc.UpdateRequest) error
-	Delete(ctx context.Context, req *desc.DeleteRequest) error
-}
+const (
+	Note = "note"
+)
 
 type repository struct {
 	client db.Client
 }
 
-func NewNoteRepository(client db.Client) NoteRepository {
+func NewRepository(client db.Client) noteRepository.NoteRepository {
 	return &repository{
 		client: client,
 	}
 }
 
 func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error) {
-	builder := sq.Insert(table.Note).
+	builder := sq.Insert(Note).
 		PlaceholderFormat(sq.Dollar).
 		Columns("title, text, author").
 		Values(noteInfo.Title, noteInfo.Text, noteInfo.Author).
@@ -65,7 +61,7 @@ func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int6
 
 func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
-		From(table.Note).
+		From(Note).
 		Where(sq.Eq{"id": id}).
 		PlaceholderFormat(sq.Dollar).
 		Limit(1)
@@ -91,7 +87,7 @@ func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 
 func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
-		From(table.Note).
+		From(Note).
 		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()
@@ -114,7 +110,7 @@ func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 }
 
 func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) error {
-	builder := sq.Update(table.Note).
+	builder := sq.Update(Note).
 		PlaceholderFormat(sq.Dollar).
 		Set("update_at", time.Now()).
 		Where(sq.Eq{"id": req.GetId()})
@@ -154,7 +150,7 @@ func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) error 
 }
 
 func (r *repository) Delete(ctx context.Context, req *desc.DeleteRequest) error {
-	builder := sq.Delete(table.Note).
+	builder := sq.Delete(Note).
 		Where(sq.Eq{"id": req.Id}).
 		PlaceholderFormat(sq.Dollar)
 
