@@ -6,28 +6,28 @@ import (
 
 	"github.com/semenzal/note-service-api/internal/model"
 	"github.com/semenzal/note-service-api/internal/pkg/db"
+	def "github.com/semenzal/note-service-api/internal/repository"
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
-	noteRepository "github.com/semenzal/note-service-api/internal/repository"
 
 	sq "github.com/Masterminds/squirrel"
 )
 
 const (
-	Note = "note"
+	tableName = "note"
 )
 
 type repository struct {
 	client db.Client
 }
 
-func NewRepository(client db.Client) noteRepository.NoteRepository {
+func NewRepository(client db.Client) def.NoteRepository {
 	return &repository{
 		client: client,
 	}
 }
 
 func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error) {
-	builder := sq.Insert(Note).
+	builder := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
 		Columns("title, text, author").
 		Values(noteInfo.Title, noteInfo.Text, noteInfo.Author).
@@ -61,7 +61,7 @@ func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int6
 
 func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
-		From(Note).
+		From(tableName).
 		Where(sq.Eq{"id": id}).
 		PlaceholderFormat(sq.Dollar).
 		Limit(1)
@@ -87,7 +87,7 @@ func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 
 func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
-		From(Note).
+		From(tableName).
 		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()
@@ -110,7 +110,7 @@ func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 }
 
 func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) error {
-	builder := sq.Update(Note).
+	builder := sq.Update(tableName).
 		PlaceholderFormat(sq.Dollar).
 		Set("update_at", time.Now()).
 		Where(sq.Eq{"id": req.GetId()})
@@ -150,7 +150,7 @@ func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) error 
 }
 
 func (r *repository) Delete(ctx context.Context, req *desc.DeleteRequest) error {
-	builder := sq.Delete(Note).
+	builder := sq.Delete(tableName).
 		Where(sq.Eq{"id": req.Id}).
 		PlaceholderFormat(sq.Dollar)
 

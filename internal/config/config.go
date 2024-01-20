@@ -39,7 +39,7 @@ type Config struct {
 	DB   DB   `json:"db"`
 }
 
-//NewConfig ...
+// NewConfig ...
 func NewConfig(path string) (*Config, error) {
 	file, err := os.ReadFile(path)
 	if err != nil {
@@ -63,7 +63,7 @@ func (h *HTTP) GetAddress() string {
 	return net.JoinHostPort(h.Host, h.Port)
 }
 
-//GetDBConfig ...
+// GetDBConfig ...
 func (c *Config) GetDBConfig() (*pgxpool.Config, error) {
 	dbDsn := strings.ReplaceAll(c.DB.DSN, dpPassEscSeq, password)
 

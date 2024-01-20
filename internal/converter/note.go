@@ -19,7 +19,7 @@ func ToDescNoteInfo(noteInfo *model.NoteInfo) *desc.NoteInfo {
 		Title:  noteInfo.Title,
 		Text:   noteInfo.Text,
 		Author: noteInfo.Author,
-		Email: 	noteInfo.Email,
+		Email:  noteInfo.Email,
 	}
 }
 
@@ -30,10 +30,10 @@ func ToDescNote(note *model.Note) *desc.Note {
 	}
 
 	return &desc.Note{
-		Id:        	note.ID,
-		Info:      	ToDescNoteInfo(note.Info),
-		CreatedAt: 	timestamppb.New(note.CreatedAt),
-		UpdatedAt: 	updatedAt,
+		Id:        note.ID,
+		Info:      ToDescNoteInfo(note.Info),
+		CreatedAt: timestamppb.New(note.CreatedAt),
+		UpdatedAt: updatedAt,
 	}
 }
 

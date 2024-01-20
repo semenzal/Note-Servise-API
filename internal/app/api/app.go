@@ -123,7 +123,7 @@ func (a *App) runGRPC(wg *sync.WaitGroup) error {
 	}
 
 	if err = a.grpcServer.Serve(list); err != nil {
-		log.Fatalf("failed to process gRPC server: %s", err.Error())
+		return err
 	}
 
 	log.Printf("Run gRPC server on %s host\n", a.serviceProvider.GetConfig().GRPC.GetAddress())
@@ -131,7 +131,6 @@ func (a *App) runGRPC(wg *sync.WaitGroup) error {
 }
 
 func (a *App) runPublicHTTP(wg *sync.WaitGroup) error {
-
 	if err := http.ListenAndServe(a.serviceProvider.GetConfig().HTTP.GetAddress(), a.mux); err != nil {
 		log.Fatalf("failed to process muxer: %s", err.Error())
 	}

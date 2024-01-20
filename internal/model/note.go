@@ -16,7 +16,7 @@ type UpdateNoteInfo struct {
 	Title  sql.NullString `db:"title"`
 	Text   sql.NullString `db:"text"`
 	Author sql.NullString `db:"author"`
-	Email 	sql.NullString `db:"email"`
+	Email  sql.NullString `db:"email"`
 }
 
 type Note struct {

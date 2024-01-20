@@ -58,8 +58,8 @@ func main() {
 
 	resUpdate, err := client.Update(context.Background(), &desc.UpdateRequest{
 		Note: &desc.UpdateNoteInfo{
-			Title: 	nil,
-			Text: 	nil,
+			Title:  nil,
+			Text:   nil,
 			Author: nil,
 		},
 	})
