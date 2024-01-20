@@ -9,9 +9,10 @@ import (
 
 	grpcValidator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/grpc"
+
 	"github.com/semenzal/note-service-api/internal/app/api/note_v1"
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
-	"google.golang.org/grpc"
 )
 
 // App ...
@@ -66,10 +67,10 @@ func (a *App) Run() error {
 
 func (a *App) initDeps(ctx context.Context) error {
 	inits := []func(context.Context) error{
-		a.initSreviceProvider,
+		a.initServiceProvider,
 		a.initServer,
 		a.initGRPCServer,
-		a.initPulicHTTPHandlers,
+		a.initPublicHTTPHandlers,
 	}
 
 	for _, f := range inits {
@@ -82,7 +83,7 @@ func (a *App) initDeps(ctx context.Context) error {
 	return nil
 }
 
-func (a *App) initSreviceProvider(_ context.Context) error {
+func (a *App) initServiceProvider(_ context.Context) error {
 	a.serviceProvider = newServiceProvider(a.pathConfig)
 	return nil
 }
@@ -103,7 +104,7 @@ func (a *App) initGRPCServer(_ context.Context) error {
 	return nil
 }
 
-func (a *App) initPulicHTTPHandlers(ctx context.Context) error {
+func (a *App) initPublicHTTPHandlers(ctx context.Context) error {
 	a.mux = runtime.NewServeMux()
 
 	opts := []grpc.DialOption{grpc.WithInsecure()}

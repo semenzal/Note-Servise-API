@@ -8,7 +8,6 @@ import "google/api/annotations.proto";
 import "validate/validate.proto";
 import "google/protobuf/wrappers.proto";
 
-
 option go_package = "github.com/semenzal/note-service-api/pkg/note_v1";
 
 service NoteService {
@@ -37,7 +36,7 @@ service NoteService {
       body: "*"
     };
   }
-  
+
   rpc Delete (DeleteRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete: "/note/v1/{id}"
