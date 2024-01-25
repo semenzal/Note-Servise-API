@@ -70,3 +70,7 @@ PHONY: .vendor-proto
 				mv vendor.protogen/protobuf/src/google/protobuf/*.proto vendor.protogen/google/protobuf &&\
 				rm -rf vendor.protogen/protobuf ;\
 			fi
+
+run:
+	go build -o gen cmd/server/main.go
+	./gen --config config/config.json
