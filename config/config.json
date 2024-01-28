@@ -5,10 +5,10 @@
     },
     "grpc": {
         "host": "localhost",
-        "port": 50051
+        "port": "50051"
     },
     "http": {
         "host": "localhost",
-        "port": 8090
+        "port": "8090"
     }
 }

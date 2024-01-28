@@ -73,4 +73,4 @@ PHONY: .vendor-proto
 
 run:
 	go build -o gen cmd/server/main.go
-	./gen --config config/config.json
+	./gen --config ./config/config.json
