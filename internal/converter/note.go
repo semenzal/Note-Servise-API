@@ -1,6 +1,8 @@
 package converter
 
 import (
+	"database/sql"
+
 	"github.com/semenzal/note-service-api/internal/model"
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -11,6 +13,46 @@ func ToNoteInfo(noteInfo *desc.NoteInfo) *model.NoteInfo {
 		Title:  noteInfo.GetTitle(),
 		Text:   noteInfo.GetText(),
 		Author: noteInfo.GetAuthor(),
+		Email:  noteInfo.GetEmail(),
+	}
+}
+
+func ToUpdateInfo(updateInfo *desc.UpdateNoteInfo) *model.UpdateNoteInfo {
+	var title, text, author, email sql.NullString
+
+	if updateInfo.Title != nil {
+		title = sql.NullString{
+			String: updateInfo.Title.Value,
+			Valid:  true,
+		}
+	}
+
+	if updateInfo.Text != nil {
+		text = sql.NullString{
+			String: updateInfo.Text.Value,
+			Valid:  true,
+		}
+	}
+
+	if updateInfo.Author != nil {
+		author = sql.NullString{
+			String: updateInfo.Author.Value,
+			Valid:  true,
+		}
+	}
+
+	if updateInfo.Email != nil {
+		email = sql.NullString{
+			String: updateInfo.Email.Value,
+			Valid:  true,
+		}
+	}
+
+	return &model.UpdateNoteInfo{
+		Title:  title,
+		Text:   text,
+		Author: author,
+		Email:  email,
 	}
 }
 

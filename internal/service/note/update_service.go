@@ -3,11 +3,11 @@ package note
 import (
 	"context"
 
-	desc "github.com/semenzal/note-service-api/pkg/note_v1"
+	"github.com/semenzal/note-service-api/internal/model"
 )
 
-func (s *Service) Update(ctx context.Context, req *desc.UpdateRequest) error {
-	err := s.noteRepository.Update(ctx, req)
+func (s *Service) Update(ctx context.Context, id int64, updateInfo *model.UpdateNoteInfo) error {
+	err := s.noteRepository.Update(ctx, id, updateInfo)
 	if err != nil {
 		return err
 	}

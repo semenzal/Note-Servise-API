@@ -29,8 +29,8 @@ func NewRepository(client db.Client) def.NoteRepository {
 func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error) {
 	builder := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
-		Columns("title, text, author").
-		Values(noteInfo.Title, noteInfo.Text, noteInfo.Author).
+		Columns("title, text, author, email").
+		Values(noteInfo.Title, noteInfo.Text, noteInfo.Author, noteInfo.Email).
 		Suffix("returning id")
 
 	query, args, err := builder.ToSql()
@@ -109,26 +109,26 @@ func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 	return notes, nil
 }
 
-func (r *repository) Update(ctx context.Context, req *desc.UpdateRequest) error {
+func (r *repository) Update(ctx context.Context, id int64, updateInfo *model.UpdateNoteInfo) error {
 	builder := sq.Update(tableName).
 		PlaceholderFormat(sq.Dollar).
-		Set("update_at", time.Now()).
-		Where(sq.Eq{"id": req.GetId()})
+		Set("updated_at", time.Now()).
+		Where(sq.Eq{"id": id})
 
-	if req.GetNote().GetTitle() != nil {
-		builder.Set("title", req.GetNote().GetTitle())
+	if updateInfo.Title.Valid {
+		builder.Set("title", updateInfo.Title)
 	}
 
-	if req.GetNote().GetText() != nil {
-		builder.Set("text", req.GetNote().GetText())
+	if updateInfo.Text.Valid {
+		builder.Set("text", updateInfo.Text)
 	}
 
-	if req.GetNote().GetAuthor() != nil {
-		builder.Set("author", req.GetNote().GetAuthor())
+	if updateInfo.Author.Valid {
+		builder.Set("author", updateInfo.Author)
 	}
 
-	if req.GetNote().GetEmail() != nil {
-		builder.Set("email", req.GetNote().GetEmail())
+	if updateInfo.Email.Valid {
+		builder.Set("email", updateInfo.Email)
 	}
 
 	query, args, err := builder.ToSql()

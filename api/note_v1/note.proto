@@ -20,7 +20,7 @@ service NoteService {
 
   rpc Get (GetRequest) returns (GetResponse) {
     option (google.api.http) = {
-      get: "/note/v1/{id}"
+      get: "/note/v1"
     };
   }
 
@@ -39,7 +39,7 @@ service NoteService {
 
   rpc Delete (DeleteRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/note/v1/{id}"
+      delete: "/note/v1"
     };
   }
 }
@@ -48,14 +48,14 @@ message NoteInfo {
   string title = 1;
   string text = 2;
   string author = 3;
-  string email = 5 [(validate.rules).string.email = true];
+  string email = 4 [(validate.rules).string.email = true];
 }
 
 message UpdateNoteInfo {
   google.protobuf.StringValue title = 1;
   google.protobuf.StringValue text = 2;
   google.protobuf.StringValue author = 3;
-  google.protobuf.StringValue email = 5 [(validate.rules).string.email = true];
+  google.protobuf.StringValue email = 4 [(validate.rules).string.email = true];
 }
 
 message Note {
