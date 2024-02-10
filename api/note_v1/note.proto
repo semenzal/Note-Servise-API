@@ -24,7 +24,7 @@ service NoteService {
     };
   }
 
-  rpc List (google.protobuf.Empty) returns (GetListResponse) {
+  rpc GetList (google.protobuf.Empty) returns (GetListResponse) {
     option (google.api.http) = {
       get: "/note/v1/list"
     };
@@ -66,8 +66,7 @@ message Note {
 }
 
 message CreateRequest {
-  int64 id = 1;
-  NoteInfo note = 2;
+  NoteInfo note = 1;
 }
 
 message CreateResponse {

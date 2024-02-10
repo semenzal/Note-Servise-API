@@ -133,7 +133,7 @@
     },
     "/note/v1/list": {
       "get": {
-        "operationId": "NoteService_List",
+        "operationId": "NoteService_GetList",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -158,10 +158,6 @@
     "note_v1CreateRequest": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        },
         "note": {
           "$ref": "#/definitions/note_v1NoteInfo"
         }

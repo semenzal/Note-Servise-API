@@ -2,8 +2,10 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"time"
 
+	"github.com/jackc/pgx/v4"
 	"github.com/semenzal/note-service-api/internal/model"
 	"github.com/semenzal/note-service-api/internal/pkg/db"
 	def "github.com/semenzal/note-service-api/internal/repository"
@@ -79,6 +81,9 @@ func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 	note := new(model.Note)
 	err = r.client.DB().GetContext(ctx, note, q, args...)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errors.New("note not found")
+		}
 		return nil, err
 	}
 
@@ -101,7 +106,7 @@ func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 	}
 
 	var notes []*model.Note
-	err = r.client.DB().SelectContext(ctx, notes, q, args...)
+	err = r.client.DB().SelectContext(ctx, &notes, q, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -116,19 +121,19 @@ func (r *repository) Update(ctx context.Context, id int64, updateInfo *model.Upd
 		Where(sq.Eq{"id": id})
 
 	if updateInfo.Title.Valid {
-		builder.Set("title", updateInfo.Title)
+		builder = builder.Set("title", updateInfo.Title)
 	}
 
 	if updateInfo.Text.Valid {
-		builder.Set("text", updateInfo.Text)
+		builder = builder.Set("text", updateInfo.Text)
 	}
 
 	if updateInfo.Author.Valid {
-		builder.Set("author", updateInfo.Author)
+		builder = builder.Set("author", updateInfo.Author)
 	}
 
 	if updateInfo.Email.Valid {
-		builder.Set("email", updateInfo.Email)
+		builder = builder.Set("email", updateInfo.Email)
 	}
 
 	query, args, err := builder.ToSql()
