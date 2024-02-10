@@ -2,16 +2,15 @@ package note
 
 import (
 	"context"
-	desc "github.com/semenzal/note-service-api/pkg/note_v1"
+
+	"github.com/semenzal/note-service-api/internal/model"
 )
 
-func (s *Service) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse,error) {
-	id, err := s.noteRepository.Create(ctx, req)
+func (s *Service) Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error) {
+	id, err := s.noteRepository.Create(ctx, noteInfo)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
-	return &desc.CreateResponse{
-		Id: id,
-	}, nil
+	return id, nil
 }
