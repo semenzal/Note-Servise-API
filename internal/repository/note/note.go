@@ -93,8 +93,8 @@ func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 func (r *repository) GetList(ctx context.Context, filter *model.Filter) ([]*model.Note, error) {
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
 		From(tableName).
-		Limit(filter.Limit).
-		Offset(filter.Offset).
+		Limit(uint64(filter.Limit.Int64)).
+		Offset(uint64(filter.Offset.Int64)).
 		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()

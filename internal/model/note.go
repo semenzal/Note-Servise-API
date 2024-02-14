@@ -27,10 +27,10 @@ type Note struct {
 }
 
 type Filter struct {
-	Title  string `db:"title"`
-	Text   string `db:"text"`
-	Author string `db:"author"`
-	Email  string `db:"email"`
-	Limit  uint64 `db:"limit"`
-	Offset uint64 `db:"offset"`
+	Title  sql.NullString `db:"title"`
+	Text   sql.NullString `db:"text"`
+	Author sql.NullString `db:"author"`
+	Email  sql.NullString `db:"email"`
+	Limit  sql.NullInt64  `db:"limit"`
+	Offset sql.NullInt64  `db:"offset"`
 }

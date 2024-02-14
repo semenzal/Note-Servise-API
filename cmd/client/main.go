@@ -7,6 +7,7 @@ import (
 
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 const address = "localhost:50051"
@@ -44,12 +45,12 @@ func main() {
 
 	resGetList, err := client.GetList(context.Background(), &desc.GetListRequest{
 		Filter: &desc.Filter{
-			Title:  "Wow!",
-			Text:   "Hello",
-			Author: "Semen",
-			Email:  "bla@yandex.ru",
-			Limit:  10,
-			Offset: 10,
+			Title:  nil,
+			Text:   nil,
+			Author: nil,
+			Email:  nil,
+			Limit:  wrapperspb.Int64(10),
+			Offset: wrapperspb.Int64(10),
 		},
 	})
 	if err != nil {

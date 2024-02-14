@@ -91,12 +91,57 @@ func ToDescNotes(notes []*model.Note) []*desc.Note {
 }
 
 func ToFilterInfo(filter *desc.Filter) *model.Filter {
+	var title, text, author, email sql.NullString
+	var limit, offset sql.NullInt64
+
+	if filter.Title != nil {
+		title = sql.NullString{
+			String: filter.Title.Value,
+			Valid:  true,
+		}
+	}
+
+	if filter.Text != nil {
+		text = sql.NullString{
+			String: filter.Text.Value,
+			Valid:  true,
+		}
+	}
+
+	if filter.Author != nil {
+		author = sql.NullString{
+			String: filter.Author.Value,
+			Valid:  true,
+		}
+	}
+
+	if filter.Email != nil {
+		email = sql.NullString{
+			String: filter.Email.Value,
+			Valid:  true,
+		}
+	}
+
+	if filter.Limit != nil {
+		limit = sql.NullInt64{
+			Int64: filter.Limit.Value,
+			Valid: true,
+		}
+	}
+
+	if filter.Offset != nil {
+		offset = sql.NullInt64{
+			Int64: filter.Offset.Value,
+			Valid: true,
+		}
+	}
+
 	return &model.Filter{
-		Title:  filter.GetTitle(),
-		Text:   filter.GetText(),
-		Author: filter.GetAuthor(),
-		Email:  filter.GetEmail(),
-		Limit:  filter.GetLimit(),
-		Offset: filter.GetOffset(),
+		Title:  title,
+		Text:   text,
+		Author: author,
+		Email:  email,
+		Limit:  limit,
+		Offset: offset,
 	}
 }

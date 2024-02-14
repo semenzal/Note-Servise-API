@@ -178,14 +178,14 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "format": "uint64"
+            "format": "int64"
           },
           {
             "name": "filter.offset",
             "in": "query",
             "required": false,
             "type": "string",
-            "format": "uint64"
+            "format": "int64"
           }
         ],
         "tags": [
@@ -229,11 +229,11 @@
         },
         "limit": {
           "type": "string",
-          "format": "uint64"
+          "format": "int64"
         },
         "offset": {
           "type": "string",
-          "format": "uint64"
+          "format": "int64"
         }
       }
     },

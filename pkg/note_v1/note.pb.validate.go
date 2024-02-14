@@ -663,27 +663,166 @@ func (m *Filter) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Title
-
-	// no validation rules for Text
-
-	// no validation rules for Author
-
-	if err := m._validateEmail(m.GetEmail()); err != nil {
-		err = FilterValidationError{
-			field:  "Email",
-			reason: "value must be a valid email address",
-			cause:  err,
+	if all {
+		switch v := interface{}(m.GetTitle()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Title",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Title",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
 		}
-		if !all {
-			return err
+	} else if v, ok := interface{}(m.GetTitle()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return FilterValidationError{
+				field:  "Title",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
 		}
-		errors = append(errors, err)
 	}
 
-	// no validation rules for Limit
+	if all {
+		switch v := interface{}(m.GetText()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Text",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Text",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetText()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return FilterValidationError{
+				field:  "Text",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
-	// no validation rules for Offset
+	if all {
+		switch v := interface{}(m.GetAuthor()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Author",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Author",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetAuthor()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return FilterValidationError{
+				field:  "Author",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if wrapper := m.GetEmail(); wrapper != nil {
+
+		if err := m._validateEmail(wrapper.GetValue()); err != nil {
+			err = FilterValidationError{
+				field:  "Email",
+				reason: "value must be a valid email address",
+				cause:  err,
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if all {
+		switch v := interface{}(m.GetLimit()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Limit",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Limit",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetLimit()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return FilterValidationError{
+				field:  "Limit",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetOffset()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Offset",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "Offset",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetOffset()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return FilterValidationError{
+				field:  "Offset",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return FilterMultiError(errors)

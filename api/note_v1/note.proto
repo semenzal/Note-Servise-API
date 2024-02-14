@@ -66,12 +66,12 @@ message Note {
 }
 
 message Filter {
-  string title = 1;
-  string text = 2;
-  string author = 3;
-  string email = 4 [(validate.rules).string.email = true];
-  uint64 limit = 5;
-  uint64 offset = 6;
+  google.protobuf.StringValue title = 1;
+  google.protobuf.StringValue text = 2;
+  google.protobuf.StringValue author = 3;
+  google.protobuf.StringValue email = 4 [(validate.rules).string.email = true];
+  google.protobuf.Int64Value limit = 5;
+  google.protobuf.Int64Value offset = 6;
 }
 
 message CreateRequest {
