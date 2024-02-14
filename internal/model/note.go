@@ -25,3 +25,12 @@ type Note struct {
 	CreatedAt time.Time    `db:"created_at"`
 	UpdatedAt sql.NullTime `db:"updated_at"`
 }
+
+type Filter struct {
+	Title  string `db:"title"`
+	Text   string `db:"text"`
+	Author string `db:"author"`
+	Email  string `db:"email"`
+	Limit  uint64 `db:"limit"`
+	Offset uint64 `db:"offset"`
+}

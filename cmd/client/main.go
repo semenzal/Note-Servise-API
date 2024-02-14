@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/golang/protobuf/ptypes/empty"
-
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 	"google.golang.org/grpc"
 )
@@ -44,7 +42,16 @@ func main() {
 
 	log.Println("Id:", resGetNote.String())
 
-	resGetList, err := client.GetList(context.Background(), &empty.Empty{})
+	resGetList, err := client.GetList(context.Background(), &desc.GetListRequest{
+		Filter: &desc.Filter{
+			Title:  "Wow!",
+			Text:   "Hello",
+			Author: "Semen",
+			Email:  "bla@yandex.ru",
+			Limit:  10,
+			Offset: 10,
+		},
+	})
 	if err != nil {
 		log.Println(err.Error())
 	}

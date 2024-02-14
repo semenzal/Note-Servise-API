@@ -89,3 +89,14 @@ func ToDescNotes(notes []*model.Note) []*desc.Note {
 
 	return res
 }
+
+func ToFilterInfo(filter *desc.Filter) *model.Filter {
+	return &model.Filter{
+		Title:  filter.GetTitle(),
+		Text:   filter.GetText(),
+		Author: filter.GetAuthor(),
+		Email:  filter.GetEmail(),
+		Limit:  filter.GetLimit(),
+		Offset: filter.GetOffset(),
+	}
+}

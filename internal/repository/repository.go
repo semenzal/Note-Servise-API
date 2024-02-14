@@ -10,7 +10,7 @@ import (
 type NoteRepository interface {
 	Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error)
 	Get(ctx context.Context, id int64) (*model.Note, error)
-	GetList(ctx context.Context) ([]*model.Note, error)
+	GetList(ctx context.Context, filter *model.Filter) ([]*model.Note, error)
 	Update(ctx context.Context, id int64, updateInfo *model.UpdateNoteInfo) error
 	Delete(ctx context.Context, req *desc.DeleteRequest) error
 }
