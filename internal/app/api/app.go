@@ -10,6 +10,7 @@ import (
 	grpcValidator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	"github.com/semenzal/note-service-api/internal/app/api/note_v1"
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
@@ -99,6 +100,7 @@ func (a *App) initGRPCServer(_ context.Context) error {
 		grpc.UnaryInterceptor(grpcValidator.UnaryServerInterceptor()),
 	)
 
+	reflection.Register(a.grpcServer)
 	desc.RegisterNoteServiceServer(a.grpcServer, a.note)
 
 	return nil

@@ -16,6 +16,10 @@ import (
 
 const (
 	tableName = "note"
+	titleColumn = "title"
+	textColumn = "text"
+	authorColumn = "author"
+	emailColumn = "email"
 )
 
 type repository struct {
@@ -93,10 +97,32 @@ func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 func (r *repository) GetList(ctx context.Context, filter *model.Filter) ([]*model.Note, error) {
 	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
 		From(tableName).
-		Limit(uint64(filter.Limit.Int64)).
-		Offset(uint64(filter.Offset.Int64)).
 		PlaceholderFormat(sq.Dollar)
+	
+	if filter.Title.Valid {
+		builder = builder.Where(titleColumn, filter.Title)
+	}
 
+	if filter.Text.Valid {
+		builder = builder.Where(textColumn, filter.Text)
+	}
+
+	if filter.Author.Valid {
+		builder = builder.Where(authorColumn, filter.Author)
+	}
+
+	if filter.Email.Valid {
+		builder = builder.Where(emailColumn, filter.Email)
+	}
+
+	if filter.Limit.Valid {
+		builder = builder.Limit(uint64(filter.Limit.Int64))
+	}
+	
+	if filter.Offset.Valid {
+		builder = builder.Offset(uint64(filter.Offset.Int64))
+	}
+	
 	query, args, err := builder.ToSql()
 	if err != nil {
 		return nil, err
