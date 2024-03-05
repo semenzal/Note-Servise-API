@@ -15,12 +15,12 @@ import (
 )
 
 const (
-	tableName = "note"
-	idColumn = "id"
-	titleColumn = "title"
-	textColumn = "text"
-	authorColumn = "author"
-	emailColumn = "email"
+	tableName         = "note"
+	idColumn          = "id"
+	titleColumn       = "title"
+	textColumn        = "text"
+	authorColumn      = "author"
+	emailColumn       = "email"
 	created_at_Column = "created_at"
 	updated_at_Column = "updated_at"
 )
@@ -101,7 +101,7 @@ func (r *repository) GetList(ctx context.Context, filter *model.Filter) ([]*mode
 	builder := sq.Select(idColumn, titleColumn, textColumn, authorColumn, created_at_Column, updated_at_Column, emailColumn).
 		From(tableName).
 		PlaceholderFormat(sq.Dollar)
-	
+
 	if filter.Title.Valid {
 		builder = builder.Where(sq.Eq{titleColumn: filter.Title.String})
 	}
@@ -121,11 +121,11 @@ func (r *repository) GetList(ctx context.Context, filter *model.Filter) ([]*mode
 	if filter.Limit.Valid {
 		builder = builder.Limit(uint64(filter.Limit.Int64))
 	}
-	
+
 	if filter.Offset.Valid {
 		builder = builder.Offset(uint64(filter.Offset.Int64))
 	}
-	
+
 	query, args, err := builder.ToSql()
 	if err != nil {
 		return nil, err
