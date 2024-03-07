@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/golang/protobuf/ptypes/empty"
-
 	desc "github.com/semenzal/note-service-api/pkg/note_v1"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 const address = "localhost:50051"
@@ -44,7 +43,16 @@ func main() {
 
 	log.Println("Id:", resGetNote.String())
 
-	resGetList, err := client.GetList(context.Background(), &empty.Empty{})
+	resGetList, err := client.GetList(context.Background(), &desc.GetListRequest{
+		Filter: &desc.Filter{
+			Title:  nil,
+			Text:   nil,
+			Author: nil,
+			Email:  nil,
+			Limit:  wrapperspb.Int64(10),
+			Offset: wrapperspb.Int64(10),
+		},
+	})
 	if err != nil {
 		log.Println(err.Error())
 	}

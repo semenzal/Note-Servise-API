@@ -15,7 +15,14 @@ import (
 )
 
 const (
-	tableName = "note"
+	tableName         = "note"
+	idColumn          = "id"
+	titleColumn       = "title"
+	textColumn        = "text"
+	authorColumn      = "author"
+	emailColumn       = "email"
+	created_at_Column = "created_at"
+	updated_at_Column = "updated_at"
 )
 
 type repository struct {
@@ -31,7 +38,7 @@ func NewRepository(client db.Client) def.NoteRepository {
 func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int64, error) {
 	builder := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
-		Columns("title, text, author, email").
+		Columns(titleColumn, textColumn, authorColumn, emailColumn).
 		Values(noteInfo.Title, noteInfo.Text, noteInfo.Author, noteInfo.Email).
 		Suffix("returning id")
 
@@ -62,7 +69,7 @@ func (r *repository) Create(ctx context.Context, noteInfo *model.NoteInfo) (int6
 }
 
 func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
-	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
+	builder := sq.Select(idColumn, titleColumn, textColumn, authorColumn, created_at_Column, updated_at_Column, emailColumn).
 		From(tableName).
 		Where(sq.Eq{"id": id}).
 		PlaceholderFormat(sq.Dollar).
@@ -90,10 +97,34 @@ func (r *repository) Get(ctx context.Context, id int64) (*model.Note, error) {
 	return note, nil
 }
 
-func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
-	builder := sq.Select("id", "title", "text", "author", "created_at", "updated_at", "email").
+func (r *repository) GetList(ctx context.Context, filter *model.Filter) ([]*model.Note, error) {
+	builder := sq.Select(idColumn, titleColumn, textColumn, authorColumn, created_at_Column, updated_at_Column, emailColumn).
 		From(tableName).
 		PlaceholderFormat(sq.Dollar)
+
+	if filter.Title.Valid {
+		builder = builder.Where(sq.Eq{titleColumn: filter.Title.String})
+	}
+
+	if filter.Text.Valid {
+		builder = builder.Where(sq.Eq{textColumn: filter.Text.String})
+	}
+
+	if filter.Author.Valid {
+		builder = builder.Where(sq.Eq{authorColumn: filter.Author.String})
+	}
+
+	if filter.Email.Valid {
+		builder = builder.Where(sq.Eq{emailColumn: filter.Email.String})
+	}
+
+	if filter.Limit.Valid {
+		builder = builder.Limit(uint64(filter.Limit.Int64))
+	}
+
+	if filter.Offset.Valid {
+		builder = builder.Offset(uint64(filter.Offset.Int64))
+	}
 
 	query, args, err := builder.ToSql()
 	if err != nil {
@@ -117,23 +148,23 @@ func (r *repository) GetList(ctx context.Context) ([]*model.Note, error) {
 func (r *repository) Update(ctx context.Context, id int64, updateInfo *model.UpdateNoteInfo) error {
 	builder := sq.Update(tableName).
 		PlaceholderFormat(sq.Dollar).
-		Set("updated_at", time.Now()).
+		Set(updated_at_Column, time.Now()).
 		Where(sq.Eq{"id": id})
 
 	if updateInfo.Title.Valid {
-		builder = builder.Set("title", updateInfo.Title)
+		builder = builder.Set(titleColumn, updateInfo.Title)
 	}
 
 	if updateInfo.Text.Valid {
-		builder = builder.Set("text", updateInfo.Text)
+		builder = builder.Set(textColumn, updateInfo.Text)
 	}
 
 	if updateInfo.Author.Valid {
-		builder = builder.Set("author", updateInfo.Author)
+		builder = builder.Set(authorColumn, updateInfo.Author)
 	}
 
 	if updateInfo.Email.Valid {
-		builder = builder.Set("email", updateInfo.Email)
+		builder = builder.Set(emailColumn, updateInfo.Email)
 	}
 
 	query, args, err := builder.ToSql()
@@ -156,7 +187,7 @@ func (r *repository) Update(ctx context.Context, id int64, updateInfo *model.Upd
 
 func (r *repository) Delete(ctx context.Context, req *desc.DeleteRequest) error {
 	builder := sq.Delete(tableName).
-		Where(sq.Eq{"id": req.Id}).
+		Where(sq.Eq{idColumn: req.Id}).
 		PlaceholderFormat(sq.Dollar)
 
 	query, args, err := builder.ToSql()

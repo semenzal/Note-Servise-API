@@ -24,7 +24,7 @@ service NoteService {
     };
   }
 
-  rpc GetList (google.protobuf.Empty) returns (GetListResponse) {
+  rpc GetList (GetListRequest) returns (GetListResponse) {
     option (google.api.http) = {
       get: "/note/v1/list"
     };
@@ -65,6 +65,15 @@ message Note {
   google.protobuf.Timestamp updated_at = 4;
 }
 
+message Filter {
+  google.protobuf.StringValue title = 1;
+  google.protobuf.StringValue text = 2;
+  google.protobuf.StringValue author = 3;
+  google.protobuf.StringValue email = 4 [(validate.rules).string.email = true];
+  google.protobuf.Int64Value limit = 5;
+  google.protobuf.Int64Value offset = 6;
+}
+
 message CreateRequest {
   NoteInfo note = 1;
 }
@@ -78,6 +87,10 @@ message GetRequest {
 }
 message GetResponse {
   Note note = 1;
+}
+
+message GetListRequest {
+  Filter filter = 1;
 }
 
 message GetListResponse {
